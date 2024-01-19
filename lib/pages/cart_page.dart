@@ -9,6 +9,16 @@ import 'package:shop/models/order_list.dart';
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
 
+
+  void _showSnackBar(BuildContext context, String text, {Duration duration = const Duration(seconds: 2)}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        duration: duration,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final Cart cart = Provider.of(context);
@@ -53,12 +63,15 @@ class CartPage extends StatelessWidget {
                   const Spacer(),
                   TextButton(
                     onPressed: () {
-                      Provider.of<OrderList>(
-                        context,
-                        listen: false,
-                      ).addOrder(cart);
-
-                      cart.clear();
+                      if (cart.totalAmount <= 0) {
+                        _showSnackBar(context, 'Nenhum produto no carrinho. Adicione produtos para a compra!');
+                      } else {
+                        Provider.of<OrderList>(
+                          context,
+                          listen: false,
+                        ).addOrder(cart);
+                        cart.clear();
+                      }
                     },
                     child: const Text('COMPRAR'),
                     style: TextButton.styleFrom(
