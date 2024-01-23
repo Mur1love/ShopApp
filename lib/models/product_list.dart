@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields
+
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -7,23 +9,30 @@ import 'package:shop/models/product.dart';
 import 'package:shop/utils/constants.dart';
 
 class ProductList with ChangeNotifier {
-  final List<Product> _items = [];
+  String _token;
+  List<Product> _items = [];
 
   List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
       _items.where((prod) => prod.isFavorite).toList();
+
+  ProductList(this._token, this._items);
+  
 
   int get itemsCount {
     return _items.length;
   }
 
   Future<void> loadProducts() async {
+  try {
     _items.clear();
 
     final response = await http.get(
-      Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
+      Uri.parse('${Constants.PRODUCT_BASE_URL}.json?auth=$_token'),
     );
+
     if (response.body == 'null') return;
+
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((productId, productData) {
       _items.add(
@@ -31,14 +40,20 @@ class ProductList with ChangeNotifier {
           id: productId,
           name: productData['name'],
           description: productData['description'],
-          price: productData['price'],
+          price: productData['price'].toDouble(), // Certifique-se de converter o preço para double se necessário
           imgUrl: productData['imgUrl'],
           isFavorite: productData['isFavorite'],
         ),
       );
     });
+
     notifyListeners();
+  } catch (error) {
+    // Tratar o erro conforme necessário, por exemplo, imprimir um log.
+    // print('Erro ao carregar os produtos: $error');
   }
+}
+
 
   Future<void> saveProduct(Map<String, Object> data) {
     bool hasId = data['id'] != null;
