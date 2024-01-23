@@ -3,22 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/components/cart_item_widget.dart';
-import 'package:shop/models/cart._item.dart';
+
 import 'package:shop/models/cart.dart';
 import 'package:shop/models/order_list.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
 
-  void _showSnackBar(BuildContext context, String text,
-      {Duration duration = const Duration(seconds: 2)}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(text),
-        duration: duration,
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

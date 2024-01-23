@@ -32,7 +32,7 @@ class Product with ChangeNotifier{
     try {
     _toggleFavorite();
     final response = await http.patch(
-        Uri.parse('${Cosntants.PRODUCT_BASE_URL}/$id.json'),
+        Uri.parse('${Constants.PRODUCT_BASE_URL}/$id.json'),
         body: jsonEncode(
           {"isFavorite": isFavorite},
         ),

@@ -1,15 +1,12 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop/models/product.dart';
 import 'package:shop/exceptions/http_exception.dart';
+import 'package:shop/models/product.dart';
 import 'package:shop/utils/constants.dart';
 
 class ProductList with ChangeNotifier {
-
   final List<Product> _items = [];
 
   List<Product> get items => [..._items];
@@ -24,7 +21,7 @@ class ProductList with ChangeNotifier {
     _items.clear();
 
     final response = await http.get(
-      Uri.parse('${Cosntants.PRODUCT_BASE_URL}.json'),
+      Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
     );
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -51,7 +48,7 @@ class ProductList with ChangeNotifier {
       name: data['name'] as String,
       description: data['description'] as String,
       price: data['price'] as double,
-      imgUrl: data['imageUrl'] as String,
+      imgUrl: data['imgUrl'] as String,
     );
 
     if (hasId) {
@@ -63,7 +60,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final response = await http.post(
-      Uri.parse('${Cosntants.PRODUCT_BASE_URL}.json'),
+      Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
       body: jsonEncode(
         {
           "name": product.name,
@@ -76,16 +73,14 @@ class ProductList with ChangeNotifier {
     );
 
     final id = jsonDecode(response.body)['name'];
-    _items.add(
-      Product(
-        id: id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        imgUrl: product.imgUrl,
-        isFavorite: product.isFavorite,
-      ),
-    );
+    _items.add(Product(
+      id: id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      imgUrl: product.imgUrl,
+      isFavorite: product.isFavorite,
+    ));
     notifyListeners();
   }
 
@@ -94,7 +89,7 @@ class ProductList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('${Cosntants.PRODUCT_BASE_URL}/${product.id}.json'),
+        Uri.parse('${Constants.PRODUCT_BASE_URL}/${product.id}.json'),
         body: jsonEncode(
           {
             "name": product.name,
@@ -104,10 +99,10 @@ class ProductList with ChangeNotifier {
           },
         ),
       );
+
       _items[index] = product;
       notifyListeners();
     }
-    return Future.value();
   }
 
   Future<void> removeProduct(Product product) async {
@@ -115,14 +110,14 @@ class ProductList with ChangeNotifier {
 
     if (index >= 0) {
       final product = _items[index];
-      _items.removeWhere((p) => p.id == product.id);
+      _items.remove(product);
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse('${Cosntants.PRODUCT_BASE_URL}/${product.id}.json'),
+        Uri.parse('${Constants.PRODUCT_BASE_URL}/${product.id}.json'),
       );
 
-      if(response.statusCode >= 400) {
+      if (response.statusCode >= 400) {
         _items.insert(index, product);
         notifyListeners();
         throw HttpException(
@@ -132,18 +127,23 @@ class ProductList with ChangeNotifier {
       }
     }
   }
-
-  // void showFavoriteOnly() {
-  //   _showFavoriteOnly = true;
-  //   notifyListeners();
-  // }
-  // void showAll() {
-  //   _showFavoriteOnly = false;
-  //   notifyListeners();
-  // }
-
-  // void addProduct(Product product) {
-  //   _items.add(product);
-  //   notifyListeners();
-  // }
 }
+
+// bool _showFavoriteOnly = false;
+
+//   List<Product> get items {
+//     if (_showFavoriteOnly) {
+//       return _items.where((prod) => prod.isFavorite).toList();
+//     }
+//     return [..._items];
+//   }
+
+//   void showFavoriteOnly() {
+//     _showFavoriteOnly = true;
+//     notifyListeners();
+//   }
+
+//   void showAll() {
+//     _showFavoriteOnly = false;
+//     notifyListeners();
+//   }
