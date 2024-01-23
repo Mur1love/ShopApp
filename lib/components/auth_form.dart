@@ -141,7 +141,7 @@ class _AuthFormState extends State<AuthForm>
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeIn,
           padding: const EdgeInsets.all(16),
-          height: _isLogin() ? 310 : 350,
+          height: _isLogin() ? 310 : 400,
           // height: _heightAnimation?.value.height ?? (_isLogin() ? 310 : 350),
           width: deviceSize.width * 0.75,
           child: Form(
@@ -177,7 +177,7 @@ class _AuthFormState extends State<AuthForm>
                   AnimatedContainer(
                     constraints: BoxConstraints(
                       minHeight: _isLogin() ? 0 : 60,
-                      maxHeight: _isLogin() ? 0 : 100,
+                      maxHeight: _isLogin() ? 0 : 120,
                     ),
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.linear,

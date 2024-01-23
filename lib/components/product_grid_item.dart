@@ -33,8 +33,9 @@ class ProductGridItem extends StatelessWidget {
               arguments: product,
             );
           },
-          child: Image.network(
-            product.imgUrl,
+          child: FadeInImage(
+            placeholder: const AssetImage('assets/images/product_placeholder.jpg'),
+            image: NetworkImage(product.imgUrl),
             fit: BoxFit.cover,
           ),
         ),
