@@ -21,7 +21,8 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.shop),
             title: const Text("Loja"),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(AppRoutes.AUTH_OR_HOME);
+              Navigator.of(context)
+                  .pushReplacementNamed(AppRoutes.AUTH_OR_HOME);
             },
           ),
           const Divider(),
@@ -32,6 +33,11 @@ class AppDrawer extends StatelessWidget {
               Navigator.of(context).pushReplacementNamed(
                 AppRoutes.ORDERS,
               );
+              // Navigator.of(context).pushReplacement(
+              //   CustomRoute(
+              //     builder: (ctx) => const OrderPage(),
+              //   ),
+              // );
             },
           ),
           const Divider(),
